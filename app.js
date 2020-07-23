@@ -27,9 +27,15 @@ class Application {
             // 构造 Context 对象
             const ctx = new Context(req, res);
 
-            // 对中间件回调函数串联，形成洋葱模型
-            const fn = compose(this.middleware);
-            await fn(ctx);
+            try {
+                // 对中间件回调函数串联，形成洋葱模型
+                const fn = compose(this.middleware);
+                await fn(ctx);
+            } catch{
+                console.error(e)
+                ctx.res.statusCode = 500
+                ctx.res.write('Internel Server Error')
+            }
 
             // ctx.body 为响应内容
             ctx.res.end(ctx.body);

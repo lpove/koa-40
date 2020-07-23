@@ -5,12 +5,26 @@ const app = new Application();
 
 app.use(async (ctx, next) => {
     ctx.body = 'hello, one'
-    await next()
+
+    try {
+        await next()
+    } catch (error) {
+        console.error(error)
+    }
 })
 
 app.use(async (ctx, next) => {
     ctx.body = 'hello, two'
-    await next()
+
+    try {
+        await next()
+    } catch (error) {
+        console.error(error)
+        // 1. 异常结构化
+        // 2. 异常分类
+        // 3. 异常级别
+        // 4. 异常上报
+    }
 })
 
 app.listen(3000, () => {

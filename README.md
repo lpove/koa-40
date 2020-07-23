@@ -291,3 +291,36 @@ app.listen(7000);
 ```
 
 > 此时还有一个小小的但不影响全局的不足：异常处理，下一步将会完成异常捕获的代码
+
+### 4、异常处理
+
+-   如果在你的后端服务中因为某一处报错，而把整个服务给挂掉了怎么办？
+
+-   我们只需要对中间件执行函数进行一次异常处理即可：
+
+```js
+try {
+    const fn = compose(this.middlewares);
+    await fn(ctx);
+} catch (e) {
+    console.error(e);
+    ctx.res.statusCode = 500;
+    ctx.res.write('Internel Server Error');
+}
+```
+
+-   然而在日常项目中使用时，我们必须在框架层的异常捕捉之前就需要捕捉到它，来做一些异常结构化及异常上报的任务，此时会使用一个异常处理的中间件：
+
+```js
+// 错误处理中间件
+app.use(async (ctx, next) => {
+    try {
+        await next();
+    } catch (err) {
+        // 1. 异常结构化
+        // 2. 异常分类
+        // 3. 异常级别
+        // 4. 异常上报
+    }
+});
+```
