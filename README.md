@@ -72,9 +72,8 @@ server.listen(3000);
 -   `app.listen`: 处理请求以及响应，并且监听端口
 -   `app.use`: 中间件函数，处理请求并完成响应
 
-*   app.js
-
 ```js
+// app.js
 const http = require('http');
 
 class Application {
@@ -96,9 +95,8 @@ class Application {
 module.exports = Application;
 ```
 
--   demo.js
-
 ```js
+// demo.js
 const open = require('open');
 const Application = require('./app');
 
