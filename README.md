@@ -38,9 +38,9 @@ app.listen(3000);
 
 主要分三块实现
 
--   Application: 基本服务器框架
--   Context: 服务器框架基本数据结构的封装，用以 http 请求解析及响应
--   Middleware: 中间件，也是洋葱模型的核心机制
+-   1、Application: 基本服务器框架
+-   2、Context: 服务器框架基本数据结构的封装，用以 http 请求解析及响应
+-   3、Middleware: 中间件，也是洋葱模型的核心机制
 
 ### 抛开框架，来写一个简单的 server
 
@@ -56,7 +56,7 @@ const server = http.createServer((req, res) => {
 server.listen(3000);
 ```
 
-### 构建 Application
+### 1、构建 Application
 
 -   目录
 
@@ -113,7 +113,9 @@ app.listen(3000, () => {
 });
 ```
 
-### 完成第二步骤 构建 Context
+-   运行 `node demo.js`
+
+### 2、 构建 Context
 
 在 koa 中，app.use 的回调参数为一个 ctx 对象，而非原生的 req/res。因此在这一步要构建一个 Context 对象，并使用 ctx.body 构建响应：
 
