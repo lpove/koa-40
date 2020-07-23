@@ -112,3 +112,66 @@ app.listen(3000, () => {
     console.log('listen 3000 port!');
 });
 ```
+
+### 完成第二步骤 构建 Context
+
+在 koa 中，app.use 的回调参数为一个 ctx 对象，而非原生的 req/res。因此在这一步要构建一个 Context 对象，并使用 ctx.body 构建响应：
+
+-   app.use(ctx => ctx.body = 'hello, world'): 通过在 http.createServer 回调函数中进一步封装 Context 实现
+-   Context(req, res): 以 request/response 数据结构为主体构造 Context 对象
+
+```js
+// app.js
+const http = require('http');
+
+class Application {
+    constructor() {
+        this.middleware = null;
+    }
+
+    use(middleware) {
+        this.middleware = middleware;
+    }
+
+    listen(...args) {
+        const server = http.createServer((req, res) => {
+            // 构造 Context 对象
+            const ctx = new Context(req, res);
+
+            // 此时处理为与 koa 兼容 Context 的 app.use 函数
+            this.middleware(ctx);
+
+            // ctx.body 为响应内容
+            ctx.res.end(ctx.body);
+        });
+        server.listen(...args);
+    }
+}
+
+// 构造一个 Context 的类
+class Context {
+    constructor(req, res) {
+        this.req = req;
+        this.res = res;
+    }
+}
+```
+
+```js
+// demo.js
+
+const open = require('open');
+const Application = require('./app');
+
+const app = new Application();
+
+app.use((ctx) => {
+    ctx.body = 'hello, world';
+});
+
+app.listen(3000, () => {
+    open('http://localhost:3000/', 'chrome');
+
+    console.log('listen 3000 port!');
+});
+```
