@@ -41,3 +41,76 @@ app.listen(3000);
 -   Application: 基本服务器框架
 -   Context: 服务器框架基本数据结构的封装，用以 http 请求解析及响应
 -   Middleware: 中间件，也是洋葱模型的核心机制
+
+### 抛开框架，来写一个简单的 server
+
+基于 node 的 `http API` 来启动一个 http 服务，并通过它来实现最简单的 `koa`
+
+```js
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    res.end('hello, world');
+});
+
+server.listen(3000);
+```
+
+### 构建 Application
+
+-   目录
+
+```bash
+- app.js
+- demo.js
+- README.md
+- .gitignore
+```
+
+首先完成 `Application` 的大体框架
+
+-   `app.listen`: 处理请求以及响应，并且监听端口
+-   `app.use`: 中间件函数，处理请求并完成响应
+
+*   app.js
+
+```js
+const http = require('http');
+
+class Application {
+    constructor() {
+        this.middleware = null;
+    }
+
+    listen(...args) {
+        const server = http.createServer(this.middleware);
+        server.listen(...args);
+    }
+
+    // 这里依旧调用的是原生 http.createServer 的回调函数
+    use(middleware) {
+        this.middleware = middleware;
+    }
+}
+
+module.exports = Application;
+```
+
+-   demo.js
+
+```js
+const open = require('open');
+const Application = require('./app');
+
+const app = new Application();
+
+app.use((req, res) => {
+    res.end('hello world');
+});
+
+app.listen(3000, () => {
+    open('http://localhost:3000/', 'chrome');
+
+    console.log('listen 3000 port!');
+});
+```
