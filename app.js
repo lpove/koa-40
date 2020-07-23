@@ -31,7 +31,7 @@ class Application {
                 // 对中间件回调函数串联，形成洋葱模型
                 const fn = compose(this.middleware);
                 await fn(ctx);
-            } catch{
+            } catch (e) {
                 console.error(e)
                 ctx.res.statusCode = 500
                 ctx.res.write('Internel Server Error')
